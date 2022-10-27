@@ -45,6 +45,10 @@ class PaintView constructor(context: Context, attrs: AttributeSet?): View(contex
         currentColor = color
     }
 
+    fun getColor(): Int{
+        return currentColor
+    }
+
 
     fun setStrokeWidth(width: Int) {
         strokeWidth = width

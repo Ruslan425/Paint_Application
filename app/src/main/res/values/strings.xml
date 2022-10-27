@@ -4,4 +4,6 @@
     <string name="save">Save</string>
     <string name="color">Color</string>
     <string name="stroke">Stroke</string>
+    <string name="current_color">Выбранный цвет</string>
+    <string name="take_color">Выбор цвета</string>
 </resources>

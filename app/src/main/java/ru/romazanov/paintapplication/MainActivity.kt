@@ -14,7 +14,6 @@ import com.google.android.material.slider.RangeSlider
 import ru.romazanov.paintapplication.databinding.ActivityMainBinding
 import java.io.OutputStream
 
-
 class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -44,6 +43,12 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+
+        binding.btnColor.setOnClickListener {
+            ColorPickerFragment(binding.drawView.getColor()) {
+                binding.drawView.setColor(it)
+            }.show(supportFragmentManager, "dialog")
         }
 
         binding.btnStroke.setOnClickListener {
