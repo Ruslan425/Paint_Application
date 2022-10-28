@@ -1,18 +1,30 @@
 package ru.romazanov.paintapplication
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.ContentValues
+import android.content.Context
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.slider.RangeSlider
 import ru.romazanov.paintapplication.databinding.ActivityMainBinding
+import java.io.File
 import java.io.OutputStream
+import java.util.Objects
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestPermissions(PERMISSIONS, MY_PERMISSIONS_REQUEST)
 
         binding.btnUndo.setOnClickListener { binding.drawView.undo() }
 
@@ -71,5 +84,41 @@ class MainActivity : AppCompatActivity() {
                 binding.drawView.init(height, width)
             }
         })
+
+        binding.btnImage.setOnClickListener {
+            ImagesFragment() {
+
+                binding.drawView.setMyBackground(it)
+            }.show(supportFragmentManager, "image_dialog")
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MY_PERMISSIONS_REQUEST && grantResults.isNotEmpty()){
+            if (isPermissions()){
+                (Objects.requireNonNull(this.getSystemService(Context.ACTIVITY_SERVICE)) as ActivityManager).clearApplicationUserData()
+                recreate()
+            }
+        }
+    }
+
+    private fun isPermissions():Boolean{
+        PERMISSIONS.forEach {
+            if (checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED){
+                return true
+            }
+        }
+        return false
+    }
+
+    companion object {
+        private const val MY_PERMISSIONS_REQUEST = 1234
+        private val PERMISSIONS = arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
     }
 }

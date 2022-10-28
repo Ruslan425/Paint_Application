@@ -2,17 +2,27 @@ package ru.romazanov.paintapplication.view
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Picture
+import android.graphics.drawable.Drawable
+import android.media.Image
+import android.net.Uri
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import ru.romazanov.paintapplication.model.Line
+import java.io.File
 import kotlin.math.abs
 
-class PaintView constructor(context: Context, attrs: AttributeSet?): View(context, attrs) {
+class PaintView constructor(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     private var mX = 0f
     private var mY = 0f
@@ -31,7 +41,7 @@ class PaintView constructor(context: Context, attrs: AttributeSet?): View(contex
     private var currentColor = 0
     private var strokeWidth = 0
     private lateinit var mBitmap: Bitmap
-    private lateinit var  mCanvas: Canvas
+    private lateinit var mCanvas: Canvas
     private val mBitmapPaint = Paint(Paint.DITHER_FLAG)
 
     fun init(height: Int, width: Int) {
@@ -45,7 +55,7 @@ class PaintView constructor(context: Context, attrs: AttributeSet?): View(contex
         currentColor = color
     }
 
-    fun getColor(): Int{
+    fun getColor(): Int {
         return currentColor
     }
 
@@ -64,6 +74,45 @@ class PaintView constructor(context: Context, attrs: AttributeSet?): View(contex
     fun save(): Bitmap {
         return mBitmap
     }
+
+//    fun setMyBackground(image: String) {
+//        Log.i("SET", image)
+//        val uri = Uri.parse(image)
+//        Glide.with(context)
+//            .asBitmap()
+//            .load(uri.path?.let { File(it) })
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//
+//                    try {
+//                        mCanvas.save()
+//                        mCanvas.drawBitmap(resource, 0f,0f, mBitmapPaint)
+//                        mCanvas.restore()
+//                    }catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
+//
+//                }
+//
+//                override fun onLoadCleared(placeholder: Drawable?) {}
+//            })
+//        Glide.with(context)
+//            .asDrawable()
+//            .load(uri.path?.let { File(it) })
+//            .into(object: CustomTarget<Drawable>() {
+//                override fun onResourceReady(
+//                    resource: Drawable,
+//                    transition: Transition<in Drawable>?
+//                ) {
+//                    background = resource
+//                }
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//
+//                }
+//
+//            })
+//
+//    }
 
     override fun onDraw(canvas: Canvas) {
         canvas.save()
