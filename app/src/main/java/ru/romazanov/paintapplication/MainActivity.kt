@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.slider.RangeSlider
 import ru.romazanov.paintapplication.databinding.ActivityMainBinding
 import java.io.File
@@ -34,8 +36,6 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         requestPermissions(PERMISSIONS, MY_PERMISSIONS_REQUEST)
-
-        binding.btnUndo.setOnClickListener { binding.drawView.undo() }
 
         binding.btnSave.setOnClickListener {
             val bmp = binding.drawView.save()
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         binding.bar.valueFrom = 0.0f
         binding.bar.valueTo = 200.0f
         binding.bar.addOnChangeListener(RangeSlider.OnChangeListener { _, value, _ ->
-            binding.drawView.setStrokeWidth(value.toInt())
+            binding.drawView.setStrokeWidth(value)
         })
 
         val vto = binding.drawView.viewTreeObserver
@@ -86,9 +86,29 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.btnImage.setOnClickListener {
+            var bmp: Bitmap?
+            var alteredBitmap: Bitmap?
             ImagesFragment() {
+                val image = it
+                if (image.isNotEmpty()) {
+                    val bmpFactoryOptions = BitmapFactory.Options()
+                    bmpFactoryOptions.inJustDecodeBounds = true
+                    bmp = BitmapFactory
+                        .decodeStream(
+                            File(image).inputStream(), null, bmpFactoryOptions
+                        )
+                    bmpFactoryOptions.inJustDecodeBounds = false
+                    bmp = BitmapFactory
+                        .decodeStream(
+                            File(image).inputStream(), null, bmpFactoryOptions
+                        )
 
-                binding.drawView.setMyBackground(it)
+                     alteredBitmap = Bitmap.createBitmap(
+                        bmp!!.width,
+                        bmp!!.height, bmp!!.config
+                    )
+                    binding.drawView.setNewImage(alteredBitmap!!, bmp!!)
+                }
             }.show(supportFragmentManager, "image_dialog")
         }
     }

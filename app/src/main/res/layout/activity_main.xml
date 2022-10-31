@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
-    <ru.romazanov.paintapplication.view.PaintView
+    <ru.romazanov.paintapplication.view.EditImageView
         android:id="@+id/draw_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -15,7 +15,9 @@
         app:layout_constraintBottom_toTopOf="@+id/linear"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <LinearLayout
         android:id="@+id/linear"
@@ -44,14 +46,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/btn_undo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/ic_baseline_undo_24"
-                android:text="@string/undo" />
 
             <ImageButton
                 android:id="@+id/btn_save"
